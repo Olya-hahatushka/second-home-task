@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Second Home Task</title>
+</head>
+<body>
+	<script type="text/javascript">
+		class Fighter {
+			constructor(name, power, health){
+				this.name = name || "user";
+				this.power = power || 10;
+				this.health = health || 100;
+			};
+			setDamage(damage){
+				let health = this.health - damage;
+				this.health = health;
+				console.log(`health: ${health} (${this.name})`);
+			};
+			hit(enemy, point = 5){
+				let damage = point * this.power;
+				enemy.setDamage(damage);
+				return damage;
+			};
+		};
+		class ImprovedFighter extends Fighter{
+			doubleHit(enemy, point = 5){
+				return super.hit(enemy, point * 2);
+			};
+		};
+
+		let fighter1 = new Fighter("User1", 20, 150);
+		let improvedFighter1 = new ImprovedFighter("User2", 15, 100);
+
+		let fighter2 = new Fighter("User1", 20, 150);
+		let improvedFighter2 = new ImprovedFighter("User2", 10, 100);
+
+		let fight = (fighter1, fighter2, ...point) => {
+			let i = 0;
+			while (true){
+				if (fighter1 instanceof ImprovedFighter)
+					fighter1.doubleHit(fighter2, point[i]);
+				else
+					fighter1.hit(fighter2, point[i]);
+				if (fighter2.health <= 0){
+					console.log(`${fighter1.name} win! ${fighter1.name} ${fighter1.health} ${fighter2.name} ${fighter2.health}`);
+					break;
+				}
+				i++;
+				if (fighter2 instanceof ImprovedFighter)
+					fighter2.doubleHit(fighter1, point[i]);
+				else
+					fighter2.hit(fighter1, point[i]);
+				if (fighter1.health <= 0){
+					console.log(`${fighter2.name} win! ${fighter1.name} ${fighter1.health} ${fighter2.name} ${fighter2.health}`);
+					break;
+				}
+				i++;
+			}
+		}
+
+		fight(fighter1, improvedFighter1, 1, 2, 3, 4);
+		fight(improvedFighter2, fighter2, 1, 2);
+	</script>
+</body>
+</html>
